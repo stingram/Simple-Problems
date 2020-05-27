@@ -1,0 +1,3 @@
+﻿  threading.cpp
+e:\college\coderpro\c++\threads_v2\threading\threading\threading.cpp(20): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  threading.vcxproj -> E:\College\CoderPro\C++\threads_v2\threading\Debug\threading.exe

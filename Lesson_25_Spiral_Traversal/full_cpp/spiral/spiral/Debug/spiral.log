@@ -1,0 +1,6 @@
+﻿  spiral.cpp
+e:\college\coderpro\lesson_25_spiral_traversal\full_cpp\spiral\spiral\spiral.cpp(47): warning C4018: '<': signed/unsigned mismatch
+e:\college\coderpro\lesson_25_spiral_traversal\full_cpp\spiral\spiral\spiral.cpp(49): warning C4018: '<': signed/unsigned mismatch
+e:\college\coderpro\lesson_25_spiral_traversal\full_cpp\spiral\spiral\spiral.cpp(43): warning C4715: 'Grid::next_direction': not all control paths return a value
+e:\college\coderpro\lesson_25_spiral_traversal\full_cpp\spiral\spiral\spiral.cpp(30): warning C4715: 'Grid::_next_position': not all control paths return a value
+  spiral.vcxproj -> E:\College\CoderPro\Lesson_25_Spiral_Traversal\full_cpp\spiral\Debug\spiral.exe
