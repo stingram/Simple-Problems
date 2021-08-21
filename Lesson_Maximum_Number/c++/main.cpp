@@ -5,15 +5,22 @@
 #include <iostream>
 
 
-std::string maximum_number(const std::vector<int>& nums)
-{
-    std::sort(nums.begin(), nums.end(), [] (const int& lhs, const int& rhs)
+bool compare_function(const int& lhs, const int& rhs)
     {
-        //std::string clhs, crhs;
-        //clhs = lhs+rhs;
-        //crhs = rhs+lhs;
-        return lhs < rhs; //clhs.compare(crhs);
-    });
+        std::string clhs, crhs;
+        clhs = std::to_string(lhs)+ std::to_string(rhs);
+        crhs = std::to_string(rhs)+ std::to_string(lhs);
+
+        int ilhs = std::stoi(clhs);
+        int irhs = std::stoi(crhs);
+
+        return ilhs > irhs; //clhs.compare(crhs);
+    };
+
+std::string maximum_number(std::vector<int>& nums)
+{
+    std::sort(nums.begin(), nums.end(), &compare_function);
+
     std::string res = "";
     for(int num : nums)
     {
