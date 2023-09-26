@@ -11,10 +11,6 @@ private:
 
 public:
     void fit(const std::vector<double>& X, const std::vector<double>& y) {
-        // derivation of fit method here:
-        // https://are.berkeley.edu/courses/EEP118/current/derive_ols.pdf
-
-
         // Implement the least squares method to learn the parameters (slope and intercept).
         // Store the learned parameters in the 'slope' and 'intercept' member variables.
 
