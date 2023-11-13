@@ -63,3 +63,11 @@ root.left = TreeNode(1)
 root.right = TreeNode(3)
 
 print(f"Is valid BST? {isValidBST(root)}")
+
+root = TreeNode(3)
+root.left = TreeNode(2)
+root.left.left = TreeNode(1)
+root.right = TreeNode(5)
+root.right.left = TreeNode(4)
+
+print(f"Is valid BST? {isValidBST(root)}")
