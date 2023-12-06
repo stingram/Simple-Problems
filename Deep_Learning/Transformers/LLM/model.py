@@ -4,7 +4,7 @@ from math import sqrt, log
 
 class InputEmbeddings(nn.Module):
     def __init__(self, d_model: int, vocab_size: int):
-        super.__init__()
+        super().__init__()
         self.d_model = d_model
         self.vocab_size = vocab_size
         self.embedding = nn.Embedding(vocab_size, d_model)
@@ -47,7 +47,7 @@ class PositionalEncoding(nn.Module):
         # only add x's length values, we don't want to add 
         # positional encodings for words that don't exist in x 
         # because number of words in x will be <= seq_len
-        x = x + (self.pe[:, :x.shape[1], :]).requires_grad(False)
+        x = x + (self.pe[:, :x.shape[1], :]).requires_grad_(False)
         # apply dropout
         return self.dropout(x)
         
@@ -84,7 +84,7 @@ class MultiHeadAttentionBlock(nn.Module):
         self.h = h
         
         # be careful with number of heads
-        assert(d_model % h == 0, "d_model is not divisible by h")
+        assert d_model % h == 0, "d_model is not divisible by h"
         
         self.d_k = d_model//h
         
@@ -115,9 +115,10 @@ class MultiHeadAttentionBlock(nn.Module):
             
         # (batch, h, seq_len, seq_len)
         # TODO - check if (0,0,0,:) == 0  or if it's (0,0,:,0) == 0
-        # I assume it's the former
-        print(f'sum: {sum(attention_scores[0,0,0,:])}')
+        # I assume it's the former. 
+        # I was correct it is each row that sums to 1 after softmax
         attention_scores = attention_scores.softmax(dim= -1)
+        # print(f'sum: {sum(attention_scores[0,0,0,:])}') 
         
         if dropout is not None:
             attention_scores = dropout(attention_scores)
