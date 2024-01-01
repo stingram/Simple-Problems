@@ -1,0 +1,6 @@
+[submodule "3D-Deep-Learning-with-Python"]
+	path = 3D-Deep-Learning-with-Python
+	url = https://github.com/PacktPublishing/3D-Deep-Learning-with-Python.git
+[submodule "Deep_Learning/Transformers/LLaMA2/llama"]
+	path = Deep_Learning/Transformers/LLaMA2/llama
+	url = https://github.com/facebookresearch/llama.git
