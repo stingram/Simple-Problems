@@ -20,10 +20,10 @@ from pytorch3d.renderer.cameras import PerspectiveCameras, OrthographicCameras
 mesh_file = "cube.obj"
 print('visualizing the mesh using open3D')
 mesh = open3d.io.read_triangle_mesh(mesh_file)
-'''open3d.visualization.draw_geometries([mesh],
+open3d.visualization.draw_geometries([mesh],
                                      mesh_show_wireframe = True,
                                      mesh_show_back_face = True,
-                                     )'''
+                                     )
 
 #Define a mini-batch of 8 cameras
 image_size = torch.ones(8, 2)
