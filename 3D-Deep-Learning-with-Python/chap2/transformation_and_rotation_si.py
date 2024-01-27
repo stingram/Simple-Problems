@@ -11,7 +11,7 @@ log_rot = torch.zeros([4,3], device=device)
 
 # We define a mini-batch of four rotations, each rotation is represented by
 # one 3D vector. The direction of the vector represents the rotation axis and the 
-# amplitude of the fector represents the angle of rotation
+# amplitude of the vector represents the angle of rotation
 log_rot[0,0] = 0.001
 log_rot[0,1] = 0.0001
 log_rot[0,2] = 0.0002
