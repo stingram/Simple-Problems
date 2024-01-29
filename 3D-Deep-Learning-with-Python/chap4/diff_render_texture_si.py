@@ -1,3 +1,8 @@
+# NOTE - this methodology doesn't work. The problem has somehting to do with the texture loss.
+# NOTE - If weight_texture isn't zero, then no learning occurs. Without considering texture
+# NOTE - in the loss calculation, camera parameters are learned. 
+
+
 import os
 import torch
 import numpy as np
@@ -139,8 +144,10 @@ class Model(nn.Module):
         image_textured = self.renderer_textured(meshes_world=self.meshes.clone(),R=R, T=T)
         
         # calculate loss
-        loss_silhouette = torch.sum((image_silhouette[...,3] - self.ref_image_silhouette) ** 2)
-        loss_textured = torch.sum((image_textured[...,:3] - self.image_ref_textured) ** 2)
+        loss_silhouette = torch.sum((image_silhouette[...,3] - self.image_ref_silhouette) ** 2) # alpha channel
+        loss_textured = torch.sum((image_textured[...,:3] - self.image_ref_textured) ** 2) # RGB channels
+        
+        print(f"Loss_textured: {loss_textured}, Loss_silhouette: {loss_silhouette}.")
         
         loss = self.weight_silhouette*loss_silhouette + self.weight_texture*loss_textured
         
@@ -148,9 +155,22 @@ class Model(nn.Module):
     
 # create instance of the Model class and create the optimizer
 model = Model(meshes=cow_mesh, renderer_silhouette=renderer_silhouette, renderer_textured=renderer_textured,
-                image_ref=image_ref, weight_silhouette=1.0, weight_texture=0.1).to(device)
+                image_ref=image_ref, weight_silhouette=1.0, weight_texture=0.0).to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.05)
+
+_, image_silhouette_init, image_rgb_init = model()
+plt.figure(figsize=(10, 10))
+plt.imshow(image_silhouette_init.detach().squeeze().cpu().numpy()[..., 3])
+plt.grid(False)
+plt.title("Starting Silhouette")
+plt.savefig(os.path.join(output_dir, 'starting_silhouette.png'))
+
+plt.figure(figsize=(10, 10))
+plt.imshow(image_rgb_init.cpu().detach().numpy().squeeze())
+plt.grid(False)
+plt.title("Starting RGB Image");
+plt.savefig(os.path.join(output_dir, 'starting_rgb.png'))
 
 # run for 200 optimization iterations
 for i in range(200):
@@ -165,19 +185,19 @@ for i in range(200):
     plt.imshow(image_silhouette[..., 3].detach().squeeze().cpu().numpy())
     plt.title(f"iter: {i}, loss: {loss.data:0.2f}")
     plt.axis("off")
-    plt.savefig(os.path.join(output_dir), 'soft_silhouette_' + str(i) + '.png' )
+    plt.savefig(os.path.join(output_dir, 'soft_silhouette_' + str(i) + '.png' ))
     plt.close()
 
     plt.figure()
     plt.imshow(image_textured.detach().squeeze().cpu().numpy())
     plt.title(f"iter: {i}, loss: {loss.data:0.2f}")
     plt.axis("off")
-    plt.savefig(os.path.join(output_dir), 'soft_texture_' + str(i) + '.png' )
+    plt.savefig(os.path.join(output_dir, 'soft_texture_' + str(i) + '.png' ))
     plt.close()
 
     # get image from phong_renderer
     R = look_at_rotation(model.camera_position[None, :], device=model.device)
-    T = -torch.bmm(R.tranpose(1,2),model.camera_position[None,:,None])[:,:,0] # shape (1,3)
+    T = -torch.bmm(R.transpose(1,2),model.camera_position[None,:,None])[:,:,0] # shape (1,3)
     image = phong_renderer(meshes_world=model.meshes.clone(),R=R,T=T)
     
 
@@ -185,17 +205,17 @@ for i in range(200):
     plt.imshow(image[..., 3].detach().squeeze().cpu().numpy())
     plt.title(f"iter: {i}, loss: {loss.data:0.2f}")
     plt.axis("off")
-    plt.savefig(os.path.join(output_dir), 'hard_silhouette_' + str(i) + '.png' )
+    plt.savefig(os.path.join(output_dir, 'hard_silhouette_' + str(i) + '.png' ))
     plt.close()
     
     image = image[0, ..., :3].detach().squeeze().cpu().numpy()
     image = img_as_ubyte(image)
     
     plt.figure()
-    plt.imshow(image[..., :3].detach().squeeze().cpu().numpy())
+    plt.imshow(image[..., :3])
     plt.title(f"iter: {i}, loss: {loss.data:0.2f}")
     plt.axis("off")
-    plt.savefig(os.path.join(output_dir), 'hard_silhouette_' + str(i) + '.png' )
+    plt.savefig(os.path.join(output_dir, 'hard_silhouette_' + str(i) + '.png' ))
     plt.close()
     
     if loss.item() < 800:
