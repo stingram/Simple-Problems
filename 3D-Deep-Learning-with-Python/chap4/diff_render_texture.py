@@ -125,12 +125,14 @@ class Model(nn.Module):
 
         loss_silhouette = torch.sum((image_silhouette[..., 3] - self.image_ref_silhouette) ** 2)
         loss_texture = torch.sum((image_textured[..., :3] - self.image_ref_textured) ** 2)
+        
+        print(f"Loss_textured: {loss_texture}")
 
         loss = self.weight_silhouette * loss_silhouette + self.weight_texture * loss_texture
         return loss, image_silhouette, image_textured
 
 model = Model(meshes=cow_mesh, renderer_silhouette=renderer_silhouette, renderer_textured = renderer_textured,
-              image_ref=image_ref, weight_silhouette=1.0, weight_texture=0.1).to(device)
+              image_ref=image_ref, weight_silhouette=1.0, weight_texture=0.01).to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.05)
 
@@ -195,8 +197,3 @@ for i in range(0, 200):
         break
 
 print('Finished')
-
-
-
-
-
