@@ -4,3 +4,14 @@
 **/*.ckpt
 **/*.pth
 **/*.pt
+out
+.vscode
+.cache
+*.pyc
+*.pt
+*.so
+*.o
+*.swp
+*.prof
+.nfs*
+_cache_*
