@@ -96,7 +96,7 @@ class NeuralRadianceField(torch.nn.Module):
         self.density_layer = torch.nn.Sequential(
             torch.nn.Linear(n_hidden_neurons, 1),
             torch.nn.Softplus(beta=10.0),
-            # Sofplus activation ensures that the raw opacity
+            # Softplus activation ensures that the raw opacity
             # is a non-negative number.
         )
         
