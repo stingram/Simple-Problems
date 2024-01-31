@@ -1,7 +1,10 @@
-absl-py==0.15.0
-torch==1.2.0
+# dependencies for opendr
+# https://github.com/microsoft/MeshTransformer/issues/8#issuecomment-854933690
+
+absl-py
+torch
 opencv-python==4.2.0.32
-numpy==1.16.6
-matplotlib==2.2.5
-chumpy==0.70
+numpy
+matplotlib
+chumpy
 opendr

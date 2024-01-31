@@ -3,7 +3,7 @@ import numpy as np
 from opendr.renderer import ColoredRenderer
 from opendr.lighting import LambertianPointLight
 from opendr.camera import ProjectPoints
-from smpl.serialization import load_model
+from serialization import load_model
 
 ## Load SMPL model (here we load the neural model)
 m = load_model('../smplify/code/models/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl')
