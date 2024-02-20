@@ -46,5 +46,6 @@ print(f"Rotation Matrices: {rotation_matrices}")
 
 # To map rotation matrices back to the gradient matrix you can
 # use so3_log_map
+# note we get back our original list of 3D vectors approximately
 log_rot_again = so3_log_map(rotation_matrices)
 print(f"log_rot_again:\n{log_rot_again}")
