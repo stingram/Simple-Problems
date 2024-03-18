@@ -41,15 +41,30 @@ letter_to_number_map = {"b":1,
 def soundex(s: str) -> str:
     res = s[0]
     i = 0
+    s = s.lower()
     while i < len(s):
-        if i < len(s):
-            if s[i] in same_sound_map and s[i+1] in same_sound_map:
+        print(f"i: {i},s: {s}, r: {res}")
+        if i < len(s) -1 and s[i] in letter_to_number_map and s[i+1] in letter_to_number_map and letter_to_number_map[s[i]] == letter_to_number_map[s[i+1]]:
                 s = s[0:i+1] + s[i+2:]
                 continue
-        if s[i] in letters_to_delete:
+        elif s[i] in letters_to_delete and i != 0:
             s = s[0:i] + s[i+1:]
             continue
-        if s[i] in letter_to_number_map:
-
+        elif s[i] in letter_to_number_map and i != 0:
+            res += str(letter_to_number_map[s[i]])
+            i += 1
+        elif i == 0:
+             i += 1
+        else:
+             print(f"ERROR")
+    while len(res) < 4:
+        res += "0"
 
     return res
+
+# Jackson and Jaxen both map to J250
+test = "Jackson"
+print(f"{soundex(test)}")
+
+test = "Jaxen"
+print(f"{soundex(test)}")
