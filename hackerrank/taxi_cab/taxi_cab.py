@@ -65,19 +65,15 @@ def num_passengers(grid: List[List[int]]) -> int:
     # 2nd run
     for r in range(R-1,-1,-1):
         for c in range(C-1,-1,-1):
-            # print(f"r,c:{r},{c}")
             if r == c and r == R-1:
                 continue
             # now update dp based on curr poss
             if grid[r][c] != -1:
                 dp2[r][c]=max(dp2[r+1][c],dp2[r][c+1])
 
-    print(f"dp1:{dp}")
-    print(f"dp2:{dp2}")
-
     # check all places where dp is != 0 and grid has a vlaue of 1
-    for r in range(R+1):
-        for c in range(C+1):
+    for r in range(1,R+1):
+        for c in range(1,C+1):
             if dp[r][c]!=0 and dp2[r-1][c-1]!=0 and grid[r-1][c-1] == 1:
                 count += 1
 
@@ -86,4 +82,18 @@ def num_passengers(grid: List[List[int]]) -> int:
 grid = [[0,1],
         [-1,0]]
 
+print(f"count: {num_passengers(grid)}")
+
+grid = [[0, 0, 0, 1],
+        [1, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]]
+# ans = 2
+print(f"count: {num_passengers(grid)}")
+
+
+grid = [[0, 1, -1], 
+        [1, 0, -1],
+        [1, 1,  1]]
+# ans = 5
 print(f"count: {num_passengers(grid)}")
