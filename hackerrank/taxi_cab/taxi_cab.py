@@ -79,21 +79,16 @@ def num_passengers(grid: List[List[int]]) -> int:
 
     return count
 
-grid = [[0,1],
-        [-1,0]]
-
-print(f"count: {num_passengers(grid)}")
-
-grid = [[0, 0, 0, 1],
+grids = []
+grids.append([[0,1],
+        [-1,0]])
+grids.append([[0, 0, 0, 1],
         [1, 0, 0, 0],
         [0, 0, 0, 0],
-        [0, 0, 0, 0]]
-# ans = 2
-print(f"count: {num_passengers(grid)}")
-
-
-grid = [[0, 1, -1], 
+        [0, 0, 0, 0]])
+grids.append([[0, 1, -1], 
         [1, 0, -1],
-        [1, 1,  1]]
-# ans = 5
-print(f"count: {num_passengers(grid)}")
+        [1, 1,  1]])
+
+for grid in grids:
+    print(f"count = {num_passengers(grid)}\nfor grid:\n{grid}\n") # ans: 1,2,5
