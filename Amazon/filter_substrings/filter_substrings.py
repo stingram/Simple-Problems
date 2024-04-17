@@ -15,6 +15,8 @@ class Trie:
             return True
         if s[0] in self.children:
             return self.children[s[0]].find(s[1:])
+        if len(self.children.keys()) == 0:
+            return True
         return False
     def add_word(self, word: str):
         if len(word) == 0:
@@ -40,12 +42,19 @@ def filter_substrings(s: str , bad_words: List[str]) -> int:
     # print(f"substrings: {substrings}")
     print(f"Trie:{trie}")
     for substring in substrings:
+        temp_longest = 0 
         for i in range(len(substring)):
-            if not trie.find(substring[i:]):
-                substring_len = len(substring[i:])
-                if substring_len > res:
-                    print(f"ss:{substring[i:]}")
-                    res = substring_len
+            found_bad_word = trie.find(substring[i:])
+            if found_bad_word:
+                temp_longest = 0
+                break
+            print(f"Bad word not found in {substring[i:]}")
+            substring_len = len(substring)
+            if substring_len > temp_longest:
+                print(f"ss:{substring}")
+                temp_longest = substring_len
+        if temp_longest> res:
+            res = temp_longest
     return res
 
 s = "cbaaaabc"
