@@ -1,62 +1,53 @@
 from typing import List, Dict
 
 class Trie:
-    def __init__(self) -> None:
-        self.val='$'
-        self.children: Dict[str,Trie] = {}
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
 
-    def __repr__(self):
-        s = f""
-        for k,v in self.children.items():
-            s += f"{k,v}"
-        return s
-    def find(self, s: str):
-        if s == "":
-            return True
-        if s[0] in self.children:
-            return self.children[s[0]].find(s[1:])
-        if len(self.children.keys()) == 0:
-            return True
-        return False
-    def add_word(self, word: str):
-        if len(word) == 0:
-            return
-        if word[0] not in self.children:
-            self.children[word[0]] = Trie()
-        trie = self.children[word[0]]
-        trie.add_word(word[1:])
+    def add_word(self, word):
+        node = self
+        for char in word:
+            if char not in node.children:
+                node.children[char] = Trie()
+            node = node.children[char]
+        # this will update "last" node 
+        node.is_end_of_word = True
 
-def _compute_substrings(s) -> List[str]:
-    res = [""]
-    for i in range(1,len(s)): # for all sizes
-        num_sweeps = len(s)-i+1
-        for start in range(num_sweeps):
-            res.append(s[start:start+i])
-    return res
-def filter_substrings(s: str , bad_words: List[str]) -> int:
-    res = 0
-    trie = Trie()
-    for bad_word in bad_words:
-        trie.add_word(bad_word)
-    substrings = _compute_substrings(s)
-    # print(f"substrings: {substrings}")
-    print(f"Trie:{trie}")
-    for substring in substrings:
-        temp_longest = 0 
-        for i in range(len(substring)):
-            found_bad_word = trie.find(substring[i:])
-            if found_bad_word:
-                temp_longest = 0
-                break
-            print(f"Bad word not found in {substring[i:]}")
-            substring_len = len(substring)
-            if substring_len > temp_longest:
-                print(f"ss:{substring}")
-                temp_longest = substring_len
-        if temp_longest> res:
-            res = temp_longest
-    return res
+class Solution:
+    def longestValidSubstring(self, word: str, forbidden: List[str]) -> int:
+        res = 0
+        trie = Trie()
+        for bad_word in set(forbidden):
+            trie.add_word(bad_word)
+
+        n = len(word)
+        right = n - 1
+        for left in range(n-1,-1,-1):
+            current_node = trie
+            for k in range(left,min(left+10,right+1)):
+                c = word[k]
+                if c not in current_node.children:
+                    break
+                current_node = current_node.children[c]
+                if current_node.is_end_of_word:
+                    right = k - 1
+                    break
+            res = max(res,right-left+1)
+        return res
 
 s = "cbaaaabc"
 bad_words = ["aaa","cb"]
-print(f"{filter_substrings(s, bad_words)}")
+print(f"{Solution().longestValidSubstring(s, bad_words)}") # 4
+
+s = "leetcode"
+bad_words = ["de","le", "e"]
+print(f"{Solution().longestValidSubstring(s, bad_words)}") # 4
+
+s = "a"
+bad_words = ["n"]
+print(f"{Solution().longestValidSubstring(s, bad_words)}") # 1
+
+s = "acbc"
+bad_words = ["cbc","acb","acb","acbc",]
+print(f"{Solution().longestValidSubstring(s, bad_words)}") # 1
