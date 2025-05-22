@@ -1,0 +1,4 @@
+run:
+  name: test
+trainer:
+  layers: 1

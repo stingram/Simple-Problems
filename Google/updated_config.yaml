@@ -1,0 +1,8 @@
+run:
+  name: test
+trainer:
+  layers: 1
+model:
+  optim:
+    schedule:
+      warmup: '5'
