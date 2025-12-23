@@ -1,0 +1,9 @@
+[aot_autograd.py:1321 DEBUG] ====== Forward (only) graph 0 ======
+[aot_autograd.py:1322 DEBUG] class <lambda>(torch.nn.Module):
+    def forward(self, arg0_1: f32[1024, 1024], arg1_1: f32[1024, 1024]):
+        # File: /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:51, code: return torch.relu(x @ w).sum()
+        mm: f32[1024, 1024] = torch.ops.aten.mm.default(arg0_1, arg1_1);  arg0_1 = arg1_1 = None
+        relu: f32[1024, 1024] = torch.ops.aten.relu.default(mm);  mm = None
+        sum_1: f32[] = torch.ops.aten.sum.default(relu);  relu = None
+        return (sum_1,)
+        

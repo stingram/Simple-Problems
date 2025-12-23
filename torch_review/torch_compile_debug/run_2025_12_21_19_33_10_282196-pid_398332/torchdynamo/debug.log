@@ -1,0 +1,25 @@
+skipping __init__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __enter__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __init__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __enter__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping enable_dynamic /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+Step 1: torchdynamo start tracing graphable_torch
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:51
+TRACE LOAD_GLOBAL torch []
+TRACE LOAD_ATTR relu [TorchVariable(<module 'torch' from '/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/__init__.py'>)]
+TRACE LOAD_FAST x [TorchVariable(<built-in method relu of type object at 0x7ff7b8a59540>)]
+TRACE LOAD_FAST w [TorchVariable(<built-in method relu of type object at 0x7ff7b8a59540>), TensorVariable()]
+TRACE BINARY_MATRIX_MULTIPLY None [TorchVariable(<built-in method relu of type object at 0x7ff7b8a59540>), TensorVariable(), TensorVariable()]
+TRACE CALL_FUNCTION 1 [TorchVariable(<built-in method relu of type object at 0x7ff7b8a59540>), TensorVariable()]
+TRACE LOAD_ATTR sum [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), sum)]
+TRACE RETURN_VALUE None [TensorVariable()]
+Step 1: torchdynamo done tracing graphable_torch (RETURN_VALUE)
+RETURN_VALUE triggered compile
+COMPILING GRAPH due to GraphCompileReason(reason='return_value', user_stack=[<FrameSummary file /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py, line 51 in graphable_torch>])
+Step 2: calling compiler function dynamo_normalization_capturing_compiler
+Step 2: done compiler function dynamo_normalization_capturing_compiler
+skipping _fn /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+skipping nothing /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+skipping __exit__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __exit__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py

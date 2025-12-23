@@ -1,0 +1,2 @@
+[logging.py:127 INFO] Step 3: torchinductor compiling FORWARDS graph 0
+[debug.py:339 WARNING] model__0_inference_0 debug trace: /home/scorpio/CoderPro/torch_review/torch_compile_debug/run_2025_12_21_19_48_35_343089-pid_401167/aot_torchinductor/model__0_inference_0.0

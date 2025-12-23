@@ -1,0 +1,108 @@
+skipping __init__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __enter__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __init__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __enter__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping enable_dynamic /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+Step 1: torchdynamo start tracing graphable_torch
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:51
+TRACE LOAD_GLOBAL torch []
+TRACE LOAD_ATTR relu [TorchVariable(<module 'torch' from '/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/__init__.py'>)]
+TRACE LOAD_FAST x [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>)]
+TRACE LOAD_FAST w [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE BINARY_MATRIX_MULTIPLY None [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable(), TensorVariable()]
+TRACE CALL_FUNCTION 1 [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE LOAD_ATTR sum [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), sum)]
+TRACE RETURN_VALUE None [TensorVariable()]
+Step 1: torchdynamo done tracing graphable_torch (RETURN_VALUE)
+RETURN_VALUE triggered compile
+COMPILING GRAPH due to GraphCompileReason(reason='return_value', user_stack=[<FrameSummary file /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py, line 51 in graphable_torch>])
+Step 2: calling compiler function dynamo_normalization_capturing_compiler
+Step 2: done compiler function dynamo_normalization_capturing_compiler
+skipping _fn /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+skipping nothing /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py
+skipping __exit__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+skipping __exit__ /home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/contextlib.py
+Step 1: torchdynamo start tracing graphable_torch
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:51
+TRACE LOAD_GLOBAL torch []
+TRACE LOAD_ATTR relu [TorchVariable(<module 'torch' from '/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/__init__.py'>)]
+TRACE LOAD_FAST x [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>)]
+TRACE LOAD_FAST w [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE BINARY_MATRIX_MULTIPLY None [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable(), TensorVariable()]
+TRACE CALL_FUNCTION 1 [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE LOAD_ATTR sum [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), sum)]
+TRACE RETURN_VALUE None [TensorVariable()]
+Step 1: torchdynamo done tracing graphable_torch (RETURN_VALUE)
+RETURN_VALUE triggered compile
+COMPILING GRAPH due to GraphCompileReason(reason='return_value', user_stack=[<FrameSummary file /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py, line 51 in graphable_torch>])
+Step 2: calling compiler function debug_wrapper
+Step 2: done compiler function debug_wrapper
+Step 1: torchdynamo start tracing graphable_torch
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:51
+TRACE LOAD_GLOBAL torch []
+TRACE LOAD_ATTR relu [TorchVariable(<module 'torch' from '/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/__init__.py'>)]
+TRACE LOAD_FAST x [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>)]
+TRACE LOAD_FAST w [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE BINARY_MATRIX_MULTIPLY None [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable(), TensorVariable()]
+TRACE CALL_FUNCTION 1 [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE LOAD_ATTR sum [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), sum)]
+TRACE RETURN_VALUE None [TensorVariable()]
+Step 1: torchdynamo done tracing graphable_torch (RETURN_VALUE)
+RETURN_VALUE triggered compile
+COMPILING GRAPH due to GraphCompileReason(reason='return_value', user_stack=[<FrameSummary file /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py, line 51 in graphable_torch>])
+Step 2: calling compiler function debug_wrapper
+Step 2: done compiler function debug_wrapper
+Step 1: torchdynamo start tracing eager_torch_with_graph_break
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:41
+TRACE LOAD_GLOBAL torch []
+TRACE LOAD_ATTR relu [TorchVariable(<module 'torch' from '/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/__init__.py'>)]
+TRACE LOAD_FAST x [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>)]
+TRACE LOAD_FAST w [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE BINARY_MATRIX_MULTIPLY None [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable(), TensorVariable()]
+TRACE CALL_FUNCTION 1 [TorchVariable(<built-in method relu of type object at 0x7fba6b459540>), TensorVariable()]
+TRACE STORE_FAST y [TensorVariable()]
+TRACE starts_line /home/scorpio/CoderPro/torch_review/dynamo_fx_inductor_walkthrough.py:44
+TRACE LOAD_FAST y []
+TRACE LOAD_ATTR sum [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), sum)]
+TRACE LOAD_ATTR item [TensorVariable()]
+TRACE CALL_FUNCTION 0 [GetAttrVariable(TensorVariable(), item)]
+Unable to write execution record /home/scorpio/CoderPro/torch_review/torch_compile_debug/run_2025_12_21_19_53_49_442927-pid_402368/error_recordings/eager_torch_with_graph_break_Unsupported_40.rec
+Traceback (most recent call last):
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/convert_frame.py", line 324, in _compile
+    out_code = transform_code_object(code, transform)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/bytecode_transformation.py", line 445, in transform_code_object
+    transformations(instructions, code_options)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/convert_frame.py", line 311, in transform
+    tracer.run()
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 1726, in run
+    super().run()
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 576, in run
+    and self.step()
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 540, in step
+    getattr(self, inst.opname)(inst)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 342, in wrapper
+    return inner_fn(self, inst)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 965, in CALL_FUNCTION
+    self.call_function(fn, args, {})
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/symbolic_convert.py", line 474, in call_function
+    self.push(fn.call_function(self, args, kwargs))
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/variables/misc.py", line 744, in call_function
+    return self.obj.call_method(tx, self.name, args, kwargs).add_options(self)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/variables/tensor.py", line 345, in call_method
+    unimplemented(f"Tensor.{name}")
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/exc.py", line 71, in unimplemented
+    raise Unsupported(msg)
+torch._dynamo.exc.Unsupported: Tensor.item
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/utils.py", line 289, in write_record_to_file
+    exec_record.dump(f)
+  File "/home/scorpio/.local/share/mamba/envs/torch2fix/lib/python3.10/site-packages/torch/_dynamo/replay_record.py", line 32, in dump
+    assert dill is not None, "replay_record requires `pip install dill`"
+AssertionError: replay_record requires `pip install dill`
