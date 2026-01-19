@@ -61,6 +61,11 @@ class RankContext:
     # -----------------------------
     # TODO collectives (your work)
     # -----------------------------
+    def _send_chunk_id(self, rank:int, step: int):
+        return (rank + 1 + step) % self.world_size
+
+    def _send_chunk_id_ag(self, rank: int, step: int):
+        return (rank - step) % self.world_size
 
     def all_reduce_sum_ring(self, x: np.ndarray, tag_base: str = "ar") -> np.ndarray:
         """
@@ -85,27 +90,44 @@ class RankContext:
         # TODO: implement
         print(f'Doing allreduce...')
         # Do reduce scatter phase
-        assert x.shape[0] % self.world_size == 0
-        block_size = x.shape[0] // self.world_size
-        chunk_inds = [(i*block_size,(i*1)*block_size) for i in range(self.world_size)]
-        # compute chunk start offset depending on rank
-        send_curr_ind = (self.rank + 1) % self.world_size
-        rec_curr_ind = (send_curr_ind + 1) % self.world_size
+        n = x.size
+        assert n % self.world_size == 0
+        # flatten
+        xf = x.reshape(-1)
+        block_size = n // self.world_size
+        chunk_inds = [(i*block_size,(i+1)*block_size) for i in range(self.world_size)]
         
-        num_payloads_received = 0
-        for _ in range(self.world_size-1):
+        print(f'{self.world_size=}')
+        for i in range(self.world_size-1):
+            send_chunk_id = self._send_chunk_id(self.rank, i)
+            receive_chunk_id = self._send_chunk_id(self.next_rank(),i)
+            buffer_to_send = xf[chunk_inds[send_chunk_id][0]:chunk_inds[send_chunk_id][1]].copy()
+            print(
+                f"rank={self.rank}, step={i}, "
+                f"send_chunk={send_chunk_id}, "
+                f"expect_recv_chunk={receive_chunk_id}"
+                )
             # send data
-            self.send(self.prev_rank,tag_base,x[chunk_inds[send_curr_ind][0]:chunk_inds[send_curr_ind][1],:])
-            payload = self.recv(self.next_rank,tag_base)
-            print(f"Payload of length {len(payload)} received from {self.next_rank}.")
-            x[chunk_inds[rec_curr_ind][0]:chunk_inds[rec_curr_ind][1],:] += payload[0]
-            send_curr_ind = (send_curr_ind+1) % self.world_size
-            rec_curr_ind = (send_curr_ind + 1) % self.world_size
+            self.send(self.prev_rank(),f'{tag_base}:rs:{self.rank}:{i}:{send_chunk_id}',buffer_to_send)
+            payload = self.recv(self.next_rank(),f'{tag_base}:rs:{self.next_rank()}:{i}:{receive_chunk_id}')
+            xf[chunk_inds[receive_chunk_id][0]:chunk_inds[receive_chunk_id][1]] += payload         
         
         # Do all-gather phase
-        
+        for i in range(self.world_size-1):
+            # send data
+            send_chunk_id = self._send_chunk_id_ag(self.rank, i)
+            receive_chunk_id = self._send_chunk_id_ag(self.prev_rank(),i)
+            buffer_to_send = xf[chunk_inds[send_chunk_id][0]:chunk_inds[send_chunk_id][1]].copy()
+            print(
+                f"rank={self.rank}, step={i}, "
+                f"send_chunk={send_chunk_id}, "
+                f"expect_recv_chunk={receive_chunk_id}"
+                )
+            self.send(self.next_rank(),f'{tag_base}:ag:{self.rank}:{i}:{send_chunk_id}',buffer_to_send)
+            payload = self.recv(self.prev_rank(),f'{tag_base}:ag:{self.prev_rank()}:{i}:{receive_chunk_id}')
+            xf[chunk_inds[receive_chunk_id][0]:chunk_inds[receive_chunk_id][1]] = payload
         return x
-        # raise NotImplementedError
+
 
     def all_gather_concat_ring(
         self,
@@ -134,7 +156,41 @@ class RankContext:
             store it in correct position
         """
         # TODO: implement
-        raise NotImplementedError
+        # Do reduce scatter phase
+        block_size = x.shape[axis]
+        chunk_inds = [(i*block_size,(i+1)*block_size) for i in range(self.world_size)]
+
+        # allocate output
+        shape = list(x.shape)
+        shape[axis] *= self.world_size
+        out = np.empty(tuple(shape),dtype=x.dtype)
+        
+        # write my own chunk first
+        send_chunk_id = self.rank
+        idx = [slice(None)]*len(x.shape)
+        idx[axis] = slice(chunk_inds[send_chunk_id][0],chunk_inds[send_chunk_id][1])
+        out[tuple(idx)] = x.copy()
+
+        # Do all-gather phase
+        for i in range(self.world_size-1):
+            # send data
+            send_chunk_id = self._send_chunk_id_ag(self.rank, i)
+            receive_chunk_id = self._send_chunk_id_ag(self.prev_rank(),i)
+            send_idx = [slice(None)]*len(x.shape)
+            send_idx[axis] = slice(chunk_inds[send_chunk_id][0],chunk_inds[send_chunk_id][1])
+            buffer_to_send = out[tuple(send_idx)].copy()
+            print(
+                f"rank={self.rank}, step={i}, "
+                f"send_chunk={send_chunk_id}, "
+                f"expect_recv_chunk={receive_chunk_id}"
+                )
+            self.send(self.next_rank(),f'{tag_base}:ag:{self.rank}:{i}:{send_chunk_id}',buffer_to_send)
+            payload = self.recv(self.prev_rank(),f'{tag_base}:ag:{self.prev_rank()}:{i}:{receive_chunk_id}')
+            receive_idx = [slice(None)]*len(x.shape)
+            receive_idx[axis] = slice(chunk_inds[receive_chunk_id][0],chunk_inds[receive_chunk_id][1])
+            out[tuple(receive_idx)] = payload
+
+        return out
 
 
 # -----------------------------
@@ -183,14 +239,14 @@ class TPLinear:
         if self.mode == "col":
             assert X_full.shape[1] == self.W_shard.shape[0]
             Y_local = X_full @ self.W_shard
-            Y = self.ctx.all_gather_concat_ring(Y_local, axis=1)
+            Y = self.ctx.all_gather_concat_ring(Y_local, axis=-1)
         elif self.mode == "row":
             assert X_full.shape[1] == self.W_shard.shape[0] * self.ctx.world_size 
             X_partial = shard_dim_contiguous(X_full,-1,self.ctx.rank,self.ctx.world_size)
             Y_partial = X_partial @ self.W_shard
             # print(f'{Y_partial=}')
             Y = self.ctx.all_reduce_sum_ring(Y_partial)
-            print(f'{Y=}')
+            # print(f'{Y=}')
         else:
             raise NotImplementedError
         if self.bias is not None:
@@ -321,8 +377,8 @@ def run_tests():
     ]
     for (world, B, in_f, out_f) in configs:
         # Make divisibility valid
-        # if out_f % world == 0:
-        #     test_column_parallel(world, B, in_f, out_f)
+        if out_f % world == 0:
+            test_column_parallel(world, B, in_f, out_f)
         if in_f % world == 0:
             test_row_parallel(world, B, in_f, out_f)
     print("✅ All tests passed (if your TODOs are implemented correctly).")
