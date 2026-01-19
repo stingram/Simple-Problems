@@ -237,16 +237,15 @@ class TPLinear:
         """
         # TODO: implement
         if self.mode == "col":
-            assert X_full.shape[1] == self.W_shard.shape[0]
+            assert X_full.shape[-1] == self.W_shard.shape[0]
             Y_local = X_full @ self.W_shard
             Y = self.ctx.all_gather_concat_ring(Y_local, axis=-1)
         elif self.mode == "row":
-            assert X_full.shape[1] == self.W_shard.shape[0] * self.ctx.world_size 
+            assert X_full.shape[-1] == self.W_shard.shape[0] * self.ctx.world_size 
             X_partial = shard_dim_contiguous(X_full,-1,self.ctx.rank,self.ctx.world_size)
             Y_partial = X_partial @ self.W_shard
             # print(f'{Y_partial=}')
             Y = self.ctx.all_reduce_sum_ring(Y_partial)
-            # print(f'{Y=}')
         else:
             raise NotImplementedError
         if self.bias is not None:
