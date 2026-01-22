@@ -249,6 +249,7 @@ class TPLinear:
         else:
             raise NotImplementedError
         if self.bias is not None:
+            assert self.bias.shape[-1] == Y.shape[-1]
             Y += self.bias
         return Y
 
