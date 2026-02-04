@@ -156,7 +156,8 @@ def rmsnorm_torch(x: torch.Tensor, weight: torch.Tensor, eps: float = 1e-6) -> t
       - avoid numerical issues
     """
     # TODO: implement
-    raise NotImplementedError
+    rms = torch.sqrt(torch.mean(torch.pow(x,2),dim=-1,keepdim=True) + eps)
+    return x / rms * weight
 
 
 # ============================================================
@@ -190,7 +191,22 @@ def sdp_attention_torch(
       - do NOT call torch.nn.functional.scaled_dot_product_attention
     """
     # TODO: implement
-    raise NotImplementedError
+    dim_k = k.shape[-1]
+    scores = (q @ torch.transpose(k,-1,-2)) / torch.sqrt(torch.tensor(dim_k, dtype=q.dtype))
+    # apply mask
+    if attn_mask is not None:
+        scores += attn_mask
+    if causal:
+        causal_mask = torch.triu(torch.ones_like(scores),diagonal=1).bool()
+        scores = scores.masked_fill(causal_mask,float('-inf'))
+        # print(f'{scores=}')
+        
+    
+    # do softmax
+    p = softmax_torch(scores,dim=-1)
+    
+    # return
+    return  p @ v
 
 
 # ============================================================
@@ -217,7 +233,16 @@ def rope_apply_torch(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> t
       - implement rotation + interleave without loops
     """
     # TODO: implement
-    raise NotImplementedError
+    # split x
+    x0 = x[...,0::2]
+    x1 = x[...,1::2]
+    
+    # rotate
+    y0 = x0 * cos - x1 * sin
+    y1 = x0 * sin + x1 * cos
+    rotated_x = torch.stack([y0,y1],dim=-1)
+    # print(f'{y0.shape=},{x.shape=},{rotated_x.shape=}')
+    return rotated_x.flatten(-2)
 
 
 def rope_build_cos_sin_torch(T: int, D: int, base: float = 10000.0, device: str = "cpu") -> Tuple[torch.Tensor, torch.Tensor]:
