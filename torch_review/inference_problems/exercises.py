@@ -297,7 +297,33 @@ def kv_cache_append(cache: KVCache, k_new: torch.Tensor, v_new: torch.Tensor) ->
       - validate no overflow
     """
     # TODO: implement
-    raise NotImplementedError
+    
+    # validate inputs
+    if k_new.shape != v_new.shape:
+        raise ValueError
+    if k_new.ndim != 4:
+        raise ValueError
+
+    # validate cache compatibility
+    B, H, T_new, D = k_new.shape
+    if cache.k.shape[0] != B or cache.k.shape[1] != H or cache.k.shape[3] != D:
+        raise ValueError
+    if cache.v.shape != cache.k.shape:
+        raise ValueError
+    
+    T_max = cache.k.shape[2]
+    start = cache.cur
+    end = start + T_new
+    
+    if end > T_max:
+        raise ValueError
+    
+    cache.k[:,:,start:end,:] = k_new
+    cache.v[:,:,start:end,:] = v_new
+    cache.cur += k_new.shape[2]
+    
+    cache.cur = end
+    
 
 def kv_cache_gather(cache: KVCache, idx: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     """
@@ -314,7 +340,11 @@ def kv_cache_gather(cache: KVCache, idx: torch.Tensor) -> Tuple[torch.Tensor, to
       - no Python loops over B
     """
     # TODO: implement
-    raise NotImplementedError
+    print(f'{idx=}')
+    k_sel = cache.k[idx[0],:,idx[1],:]
+    v_sel = cache.v[idx[0],:,idx[1],:]
+    
+    return (k_sel, v_sel)
 
 
 # ============================================================
