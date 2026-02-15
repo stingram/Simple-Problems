@@ -1,5 +1,5 @@
 from typing import List
-
+import numpy as np
 
 def reverse_list(l: List[int]) -> List[int]:
     reversed = l[::-1]
@@ -48,3 +48,23 @@ class Stack:
     
     def is_empty(self) -> bool:
         return len(self.items) == 0 
+    
+# do matrix multiplication
+def matrix_multiplication(x: np.ndarray, w: np.ndarray) -> np.ndarray:
+    assert x.dtype == w.dtype
+    assert x.shape[-1] == w.shape[-2]
+    return np.matmul(x, w)
+
+# do dot product of two vectors
+def dot_product(x: np.ndarray, y: np.ndarray) -> np.float32:
+    assert x.dtype == y.dtype
+    assert x.ndim == 2 and y.ndim == 2
+    assert x.shape == y.shape
+    return np.dot(x,y)
+
+# write function that replaces all negative numbers in array with 0 
+# and all positive numbers with 1
+def neg_to_zero_pos_to_one(x: np.ndarray) -> np.ndarray:
+    return np.where(x < 0, 0, 1)
+
+# find indices of 
