@@ -62,7 +62,6 @@ def kmeans(points, k, max_iters=100, tol=1e-4):
     points = np.array(points)
     centroids = points[:k]
     labels = np.zeros(len(points),dtype=np.int32)
-    dists = np.zeros((len(points),k))
     for i in range(max_iters):
         # calculate distances
         for j,point in enumerate(points):
@@ -75,16 +74,19 @@ def kmeans(points, k, max_iters=100, tol=1e-4):
                     min_dist = d
         # move centroids
         new_centroids = np.zeros_like(centroids)
-        print(f'{labels=}')
+        # print(f'{labels=}')
         for c in range(k):
-            new_centroids[c] = np.mean(points[np.where(labels==c)],axis=0)
+            new_centroid =  np.mean(points[np.where(labels==c)],axis=0)
+            if ~np.isnan(new_centroid).any():
+                new_centroids[c] = new_centroid
+            else:
+                new_centroids[c] = centroids[c]
 
         # check if we can exit
         diff = centroids - new_centroids
         diff_sq = diff ** 2
         diff_sq_sum = np.sum(diff_sq,axis=1)
         norm = np.sqrt(diff_sq_sum)
-        print(f'{norm=},{tol=},{np.any(norm < tol)=}')
         if np.all(norm <= tol):
             centroids = new_centroids.copy()
             return centroids, labels
@@ -120,7 +122,7 @@ def _check_assignments_consistent(points, centroids, assignments):
     for i, p in enumerate(points):
         c = assignments[i]
         assert 0 <= c < k, f"invalid cluster id {c} for point {i}"
-        print(f'{c=},{centroids=}')
+        # print(f'{c=},{centroids=}')
         d_assigned = _squared_dist(p, centroids[c])
         for j in range(k):
             d_j = _squared_dist(p, centroids[j])
