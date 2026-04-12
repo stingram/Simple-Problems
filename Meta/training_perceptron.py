@@ -60,8 +60,23 @@ import numpy as np
 
 
 def train_perceptron(X, y, epochs=10):
-    raise NotImplementedError
-
+    
+    xN, xd = X.shape
+    yN = y.shape[0]
+    assert xN == yN
+    assert np.where(y == -1)[0].shape[0] + np.where(y == 1)[0].shape[0] == yN
+    
+    w = np.zeros(xd)
+    b = 0.0
+    
+    for _ in range(epochs):
+        for i in range(xN):
+            score =np.dot(w,X[i])+b
+            y_pred = 1 if score >= 0 else -1
+            if y_pred != y[i]:
+                b += np.sum(y[i])
+                w += y[i]*X[i]
+    return w, b
 
 # =========================
 # Tests
